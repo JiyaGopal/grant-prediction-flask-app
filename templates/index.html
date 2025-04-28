@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>STARTUP GRANT PREDICTOR</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #030d18;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #a0aaf7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #4a5dfc;
+        }
+
+        .step-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .results h2 {
+            color: #010a12;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            background-color: #a0aaf7;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            color: #28333d;
+        }
+
+        .progress {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #a0aaf7;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        p {
+            color: #e7412e;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            color: #2c3e50;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 80%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .modal-content ul li {
+            background-color: #a0aaf7;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            color: #28333d;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #4a5dfc;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>STARTUP GRANT PREDICTOR</h1>
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <form method="POST" action="/">
+        <div class="form-step active">
+            <label>Product Name:
+                <input type="text" name="product_name" required>
+            </label>
+            <label>Product Stage:
+                <input type="text" name="product_stage" required>
+            </label>
+            <label>Industry:
+                <input type="text" name="industry" required>
+            </label>
+            <label>Technology Domain:
+                <input type="text" name="technology_domain" required>
+            </label>
+            <div class="step-buttons">
+                <span></span>
+                <button type="button" class="btn" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+
+        <div class="form-step">
+            <label>Are you a Student Startup?
+                <select name="are_you_a_student_startup">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </label>
+            <label>Are you a Women's Startup?
+                <select name="are_you_a_womens_startup">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </label>
+            <label>Are you a Transgender Startup?
+                <select name="are_you_a_transgender_startup">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </label>
+            <label>Details of previous grants received from KSUM:
+                <select name="previous_grants_received_from_ksum">
+                    <option value="yes">yes</option>
+                    <option value="no">no</option>
+                </select>
+            </label>
+            <div class="step-buttons">
+                <button type="button" class="btn" onclick="prevStep()">Previous</button>
+                <button type="button" class="btn" onclick="nextStep()">Next</button>
+            </div>
+        </div>
+
+        <div class="form-step">
+            <label>Amount:
+                <input type="number" name="amount" required>
+            </label>
+            <label>Business Model:
+                <input type="text" name="business_model" required>
+            </label>
+            <label>Details of fund raised in last 2 years ():
+                <input type="number" name="fund_raised_last_2_years">
+            </label>
+            <label>Investments made so far including own funds:
+                <input type="number" name="investments_made_so_far" required>
+            </label>
+            <label>Monthly turnover:
+                <input type="number" name="monthly_turnover">
+            </label>
+            <div class="step-buttons">
+                <button type="button" class="btn" onclick="prevStep()">Previous</button>
+                <button type="submit" class="btn">Predict Eligible Grants</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    const steps = document.querySelectorAll('.form-step');
+    const progressBar = document.getElementById('progressBar');
+    let currentStep = 0;
+    function showStep(step) {
+        steps.forEach((s, i) => {
+            s.classList.toggle('active', i === step);
+        });
+        progressBar.style.width = ((step + 1) / steps.length) * 100 + '%';
+    }
+    function nextStep() {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    }
+    function prevStep() {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    }
+    showStep(currentStep);
+</script>
+
+<div id="grantModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2>Eligible Grants</h2>
+      <p style="color: rgb(52, 6, 6); font-weight: bold;">Based on the details of your startup, you can avail the following grants:</p>
+      <ul id="grantList"></ul>
+      <button class="btn" onclick="handleDone()" style="margin-top: 20px;">Done</button>
+    </div>
+  </div>
+  
+  <div id="successModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeSuccessModal()">&times;</span>
+      <h2>ALL THE BEST!</h2>
+      <p>We wish you great success with your startup journey! </p>
+      <button class="btn" onclick="closeSuccessModal()" style="margin-top: 20px;">Thanks!</button>
+    </div>
+  </div>
+  
+  <script>
+  function showModal(grants) {
+      const modal = document.getElementById('grantModal');
+      const grantList = document.getElementById('grantList');
+      grantList.innerHTML = '';
+      grants.forEach(grant => {
+          const li = document.createElement('li');
+          li.textContent = grant;
+          grantList.appendChild(li);
+      });
+      modal.style.display = 'flex';
+  }
+  
+  function closeModal() {
+      document.getElementById('grantModal').style.display = 'none';
+  }
+  
+  function handleDone() {
+      closeModal();
+      setTimeout(() => {
+          document.getElementById('successModal').style.display = 'flex';
+      }, 300); 
+  }
+  
+  function closeSuccessModal() {
+      document.getElementById('successModal').style.display = 'none';
+  }
+  </script>
+  
+  {% if grants %}
+  <script>
+      window.onload = function() {
+          const grants = {{ grants|tojson }};
+          showModal(grants);
+      }
+  </script>
+  {% endif %}
+  
